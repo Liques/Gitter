@@ -20,10 +20,11 @@ namespace Blazor.Gitter.Server
             services.AddServerSideBlazor();
             services.AddScoped<HttpClient>((s) => new HttpClient())
                 .AddScoped<IChatApi, GitterApi>()
-                .AddSingleton<IAuthApi, GitterAuthApi>()
+                .AddScoped<IAuthApi, GitterAuthApi>()
                 .AddScoped<ILocalStorageService, LocalStorageService>()
                 .AddScoped<ILocalisationHelper, LocalisationHelper>()
                 .AddScoped<IAppState, AppState>();
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +49,13 @@ namespace Blazor.Gitter.Server
             {
                 routes.MapFallbackToPage("/_Host");
                 routes.MapBlazorHub<Core.App<Core.Components.Shared.Navbar>>("app");
+            });
+
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("http://localhost:5000")
+                       .WithMethods("GET", "POST")
+                       .AllowAnyHeader();
             });
         }
     }

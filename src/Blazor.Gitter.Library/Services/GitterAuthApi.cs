@@ -10,10 +10,11 @@ namespace Blazor.Gitter.Library
 {
     public class GitterAuthApi : IAuthApi
     {
-        private const string APIBASE = "https://gitter.im/login/oauth/";
+        private const string APIBASE = "http://gitter.im/login/oauth/";
 
-        private const string OAUTHKEY = "127f77459c9d8a66244863d4133d4af80d0e5c1c";
-        private const string OAUTHSECRET = "ab35323b7b204c81085e398c245bd1566ecc3950";
+        private const string TOKEN = "150e89b37d36aa088a1b2ac88553eafbc863c2125";
+        private const string OAUTHKEY = "2127f77459c9d8a66244863d4133d4af80d0e5c1c";
+        private const string OAUTHSECRET = "3ab35323b7b204c81085e398c245bd1566ecc3950";
         private const string REDIRECTURI = "https://localhost:44393/";
 
         private string Token { get; set; }
@@ -21,6 +22,8 @@ namespace Blazor.Gitter.Library
         public GitterAuthApi(HttpClient httpClient = null)
         {
             HttpClient = httpClient ?? throw new Exception("Make sure you have added an HttpClient to your DI Container");
+            HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {Token}");
         }
 
         public async Task<string> GetAccessToken(string exchangeToken)
